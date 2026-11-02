@@ -1,0 +1,144 @@
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+
+void display() {
+
+	cout<< R"(
+1- Add Song.
+2- Remove Song.
+3- Show Playlist.
+0- Exit.
+        
+ENTER WHICH OPTION: )";
+}
+
+struct node{
+    string song;
+    node* next;
+};
+
+class Playlist{
+private:
+    node* head;
+public:
+    Playlist(){
+        head = nullptr;
+    }
+    
+    void addsong(string name){
+       
+        node* newnode= new node();
+        newnode->song = name;
+        newnode->next =nullptr;
+        
+        if (head == nullptr){
+            head = newnode;
+        }else{
+            node* temp = head;
+            while (temp->next != nullptr){
+                temp =temp -> next;
+            }
+            temp->next = newnode;
+        }
+        cout<< "SONG ADD SUCCESSFULLY!\n";
+    }
+    
+    void removeSong(string name) {
+        if (head == nullptr) {
+            cout << "Playlist is empty.\n";
+            return;
+        }
+        
+        if (head->song == name) {
+            node* del = head;
+            head = head->next;
+            delete del;
+            cout << "SONG REMOVED SUCCESSFULLY!.\n";
+            return;
+        }
+        node* temp = head;
+        while (temp->next != nullptr && temp->next->song != name) {
+            temp = temp->next;
+        }
+
+        if (temp->next == nullptr) {
+            cout << "SONG NOT FOUND.\n";
+        } else {
+            node* del = temp->next;
+            temp->next = temp->next->next;
+            delete del;
+            cout << "SONG REMOVED SUCCESSFULLY!..\n";
+        }
+        
+    }
+    
+    
+    
+    void show() {
+        if (head == nullptr) {
+            cout << "Playlist is empty.\n";
+            return;
+        }
+        int count = 0;
+        node* temp = head;
+        while (temp != nullptr) {
+            count++;
+            temp = temp->next;
+        }
+
+        
+        
+        cout << "\n--- Current Playlist ---\n";
+        cout<<"NO OF SONGS: "<<count<<endl;
+        temp = head;
+        int index =1;
+        while (temp != nullptr) {
+            cout << index << ". " << temp->song << "\n";
+            temp = temp->next;
+            index++;
+        }
+        cout << "------------------------\n";
+    }
+    
+    
+};
+
+
+int main()
+{
+	
+    Playlist myplaylist;
+	int options;
+	string songname;
+	do {
+	    display();
+        cin >> options;
+        cin.ignore();
+        
+		switch(options) {
+		    case 1:
+		        cout<<"Song name: ";
+                getline(cin,songname);
+			    myplaylist.addsong(songname);
+			    break;
+	    	case 2:
+		    	cout<<"Song name: ";
+                getline(cin,songname);
+			    myplaylist.removeSong(songname);
+			    break;
+	    	case 3:
+		    	myplaylist.show();
+			    break;
+		    case 0:
+			    cout<<"See you again later.\n";
+			    break;
+		    default:
+			    cout << "Invalid option! Try again.\n";
+		}
+	} while (options!=0);
+	return 0;
+}
